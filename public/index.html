@@ -87,6 +87,7 @@
        },
        _onClick: function (e) {
          var self = this;
+         new Audio("audio/wow.mp3").play();
          axios.get('/increment_wow/' + this.props.person.id)
           .then(function (res) {
             self.setAllPersons();
