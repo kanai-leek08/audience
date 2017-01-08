@@ -58,7 +58,7 @@
             var persons = self.state.persons.concat(res.data);
             self.setState({ persons: persons });
           });
-          App.room.refresh('');
+         App.room.refresh('');
        },
        render: function() {
          return (
@@ -116,11 +116,11 @@
        _onClick: function (e) {
          var self = this;
          new Audio("audio/wow.mp3").play();
+         App.room.refresh('');
          axios.get('/increment_wow/' + this.props.person.id)
           .then(function (res) {
             self.setAllPersons();
           });
-          App.room.refresh('');
           event.target.value = '';
           event.preventDefault();
        },
