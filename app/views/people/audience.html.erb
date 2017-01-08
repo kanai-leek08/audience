@@ -21,7 +21,6 @@
        getInitialState: function () {
          this.setAllPersons();
          return {
-           textVal: "",
            persons: []
          };
        },
@@ -45,10 +44,28 @@
        render: function() {
          return (
            <div>
+             <Message />
              <PersonInput onChange={this.setStateTextVal} onSave={this.setNewPersons} />
              <Person persons={this.state.persons} setAllPersons={this.setAllPersons} />
            </div>
          );
+       }
+     });
+     var Message = React.createClass({
+       getInitialState: function () {
+         return {
+           messages: ['hoge', 'fuga']
+         };
+       },
+       render: function() {
+         var messages = this.state.messages.map(function (message) {
+           return (
+             <div>
+               <p>{message}</p>
+             </div>
+           );
+         });
+         return <div>{messages}</div>
        }
      });
      var PersonInput = React.createClass({
@@ -126,6 +143,17 @@
        }
      });
      var m = React.render(<Root />, document.getElementById('app'));
+    </script>
+
+  <script>
+     App.room = App.cable.subscriptions.create("RoomChannel", {
+        connected: function() {},
+        disconnected: function() {},
+        received: function(data) {},
+        speak: function() {
+          return this.perform('speak');
+        }
+      });
     </script>
   </body>
 </html>

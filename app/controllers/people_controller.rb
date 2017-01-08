@@ -4,8 +4,15 @@ class PeopleController < ApplicationController
   # GET /people
   def index
     @people = Person.all
-
     render json: @people
+  end
+
+  def message
+    @message = Message.all
+  end
+
+  def audience
+    render 'audience'
   end
 
   # GET /people/1
