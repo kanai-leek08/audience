@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="js/react.js"></script>
-    <script src="js/JSX.js"></script>
+    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
       body {
@@ -48,10 +49,10 @@
   </head>
   <body>
     <div id="app"></div>
-    <script type="text/jsx">
+    <script type="text/babel">
      var Root = React.createClass({
        getInitialState: function () {
-         react = this;
+         var react = this;
          App.room = App.cable.subscriptions.create("RoomChannel", {
            connected: function() {},
            disconnected: function() {},
@@ -126,7 +127,7 @@
          var self = this;
          var persons = this.props.persons.map(function (person) {
            return (
-             <div className="person">
+             <div key={person.id} className="person">
               <PersonWow person={person} setAllPersons={self._setAllPersons}/>
               <PersonDelete person={person} setAllPersons={self._setAllPersons}/>
               <p className="personWow"><span className="count">{person.wow}</span>へぇ</p>
@@ -213,7 +214,7 @@
     //      )
     //    }
     //  });
-      var m = React.render(<Root />, document.getElementById('app'));
+      var m = ReactDOM.render(<Root />, document.getElementById('app'));
     </script>
   </body>
 </html>
