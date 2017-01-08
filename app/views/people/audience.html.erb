@@ -48,6 +48,17 @@
         margin: 0px;
         margin-left: 10px;
       }
+      .popup{
+        display:none;
+        font-size: 50px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background: rgba(0,0,0,0.4);
+        color: white;
+        border-radius: 50px;
+        padding: 13px;
+      }
     </style>
   </head>
   <body>
@@ -61,6 +72,20 @@
            disconnected: function() {},
            received: function(data) {
              react.setAllPersons();
+             if (data.message.match(/wow/)) {
+               var random = Math.floor(Math.random() * (500 - 50) + 50);
+               var popupClass = 'popup-' + random;
+               var $elem = $("<div class='popup " + popupClass + "'>へぇ</div>");
+               $elem.css('top', random);
+               $elem.css('left', random);
+               $('body').append($elem);
+               $('.' + popupClass).fadeIn(300);
+               setTimeout(function(){
+                 $('.' + popupClass).fadeOut(300, function(){
+                   $($elem).remove();
+                 });
+               }, 1000);
+             }
            },
            speak: function(message) {
              return this.perform('speak', {
@@ -152,17 +177,18 @@
        personWow: function (e) {
          var self = this;
          new Audio("audio/wow.mp3").play();
-         App.room.refresh('');
+         App.room.refresh('wow');
          axios.get('/increment_wow/' + this.props.person.id)
           .then(function (res) {
             self.setAllPersons();
           });
           event.target.value = '';
           event.preventDefault();
+
           $('button').prop('disabled', true);
           setTimeout(function(){
             $('button').prop('disabled', false);
-          }, 1000);
+          }, 500);
        },
        render: function() {
          return (
