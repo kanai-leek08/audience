@@ -19,6 +19,24 @@
     <script type="text/jsx">
      var Root = React.createClass({
        getInitialState: function () {
+         react = this;
+         App.room = App.cable.subscriptions.create("RoomChannel", {
+           connected: function() {},
+           disconnected: function() {},
+           received: function(data) {
+             react.setAllPersons();
+           },
+           speak: function(message) {
+             return this.perform('speak', {
+               message: message
+             });
+           },
+           refresh: function(message) {
+             return this.perform('refresh', {
+               message: message
+             });
+           }
+         });
          this.setAllPersons();
          return {
            persons: []
@@ -40,37 +58,16 @@
             var persons = self.state.persons.concat(res.data);
             self.setState({ persons: persons });
           });
+          App.room.refresh('');
        },
        render: function() {
          return (
            <div>
-             <Message />
+             {/*<Message />*/}
              <PersonInput onChange={this.setStateTextVal} onSave={this.setNewPersons} />
              <Person persons={this.state.persons} setAllPersons={this.setAllPersons} />
            </div>
          );
-       }
-     });
-     var Message = React.createClass({
-       getInitialState: function () {
-         return {
-           messages: []
-         };
-       },
-       render: function() {
-         var messages = this.state.messages.map(function (message) {
-           return (
-               <p>{message}</p>
-           );
-         });
-         return (
-           <div>
-             <div id="messages">
-               {messages}
-             </div>
-             <input data-behavior="room_speaker"/>
-           </div>
-         )
        }
      });
      var PersonInput = React.createClass({
@@ -123,6 +120,9 @@
           .then(function (res) {
             self.setAllPersons();
           });
+          App.room.refresh('');
+          event.target.value = '';
+          event.preventDefault();
        },
        render: function() {
          return (
@@ -140,6 +140,7 @@
           .then(function (res) {
             self.setAllPersons();
           });
+          App.room.refresh('');
        },
        render: function() {
          return (
@@ -147,8 +148,36 @@
          );
        }
      });
-     var m = React.render(<Root />, document.getElementById('app'));
+    //  var Message = React.createClass({
+    //    getInitialState: function () {
+    //      $(document).on('keypress', '[data-behavior~=room_speaker]', function(event) {
+    //        if (event.keyCode === 13) {
+    //          App.room.speak(event.target.value);
+    //          event.target.value = '';
+    //          return event.preventDefault();
+    //        }
+    //      });
+    //      return {
+    //        messages: []
+    //      };
+    //    },
+    //    render: function() {
+    //      var messages = this.state.messages.map(function (message) {
+    //        return (
+    //            <p>{message}</p>
+    //        );
+    //      });
+    //      return (
+    //        <div>
+    //          <div id="messages">
+    //            {messages}
+    //          </div>
+    //          <input data-behavior="room_speaker"/>
+    //        </div>
+    //      )
+    //    }
+    //  });
+      var m = React.render(<Root />, document.getElementById('app'));
     </script>
-
   </body>
 </html>
