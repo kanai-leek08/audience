@@ -8,7 +8,7 @@ class PeopleController < ApplicationController
   end
 
   def message
-    @message = Message.all
+    @message = Message.all.order('id asc')
   end
 
   def audience
