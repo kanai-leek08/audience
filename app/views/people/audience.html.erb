@@ -81,6 +81,7 @@
              react.setAllPersons();
              if (data.message.match(/wow/)) {
                var name = data.message.split(',')[1]
+               var color = data.message.split(',')[2]
                var top = Math.floor(Math.random() * ($(window).height() - 0) + 0);
                var left = Math.floor(Math.random() * ($(window).width() - 0) + 0);
                var popupClass = 'popup-' + top;
@@ -89,6 +90,14 @@
                $elem.css('top', top);
                $elem.css('left', left);
                $elem.css('text-align', 'center');
+               var colorMap = {
+                 1: 'rgba(210,102,102,0.4)',
+                 2: 'rgba(65,142,69,0.4)',
+                 3: 'rgba(90,140,222,0.4)',
+                 4: 'rgba(186,193,0,0.4)',
+                 5: 'rgba(140,66,202,0.4)',
+               }
+               $elem.css('background', colorMap[color]);
                $('body').append($elem);
                $('.' + popupClass).fadeIn(300);
                setTimeout(function(){
@@ -156,6 +165,8 @@
              <input className="personInput" type="text" onChange={this._onChange} onKeyDown={this._onKeyDown} />
              <span>へぇネーム</span>
              <input className="wowName" />
+             <span>へぇカラー</span>
+             <input className="wowColor" type="number" min="1" max="5" />
           </div>
          )
        }
@@ -190,7 +201,7 @@
        personWow: function (e) {
          var self = this;
          new Audio("audio/wow.mp3").play();
-         App.room.refresh('wow,' + $('.wowName').val());
+         App.room.refresh('wow,' + $('.wowName').val() + ',' + $('.wowColor').val() + ',');
          axios.get('/increment_wow/' + this.props.person.id)
           .then(function (res) {
             self.setAllPersons();
