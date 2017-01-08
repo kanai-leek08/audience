@@ -5,12 +5,44 @@
     <script src="js/JSX.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
+      body {
+        color: gray;
+      }
       .person{
-        width: 31%;
+        width: 200px;
         display: inline-block;
-        background: #4CAF50;
-        text-align: center;
+        border: solid 1px gray;
         margin: 10px;
+      }
+      .personWow{
+        margin: 0px;
+        margin-top: 6px;
+        border-top: 1px gray dashed;
+        text-align: center;
+      }
+      .personName{
+        text-align: right;
+        padding-right: 15px;
+        font-size: 12px;
+      }
+      .personName span{
+      }
+      .personWow .count{
+        font-size: 40px;
+        color: green;
+      }
+      .personWowBtn{
+        top: 0px;
+        background: #008000;
+        border: none;
+        margin: 0px;
+        color: white;
+        margin-left: 5px;
+      }
+      .personDelete{
+        position: relative;
+        margin: 0px;
+        margin-left: 10px;
       }
     </style>
   </head>
@@ -95,10 +127,10 @@
          var persons = this.props.persons.map(function (person) {
            return (
              <div className="person">
-              <p>{person.name}</p>
-              <p>{person.wow}へぇ</p>
               <PersonWow person={person} setAllPersons={self._setAllPersons}/>
               <PersonDelete person={person} setAllPersons={self._setAllPersons}/>
+              <p className="personWow"><span className="count">{person.wow}</span>へぇ</p>
+              <div className="personName"><span>{person.name}</span></div>
              </div>
            );
          });
@@ -113,7 +145,7 @@
        setAllPersons: function(){
          this.props.setAllPersons();
        },
-       _onClick: function (e) {
+       personWow: function (e) {
          var self = this;
          new Audio("audio/wow.mp3").play();
          App.room.refresh('');
@@ -126,7 +158,7 @@
        },
        render: function() {
          return (
-           <button onClick={this._onClick}>へぇボタン</button>
+           <button className="personWowBtn" onClick={this.personWow}>へぇ</button>
          );
        }
      });
@@ -134,7 +166,7 @@
        setAllPersons: function(){
          this.props.setAllPersons();
        },
-       _onClick: function (e) {
+       deletePerson: function (e) {
          var self = this;
          axios.delete('/people/' + this.props.person.id)
           .then(function (res) {
@@ -144,7 +176,7 @@
        },
        render: function() {
          return (
-           <button onClick={this._onClick}>X ユーザ削除</button>
+           <span className="personDelete" onClick={this.deletePerson}>×</span>
          );
        }
      });

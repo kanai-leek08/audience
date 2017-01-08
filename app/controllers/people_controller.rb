@@ -3,7 +3,7 @@ class PeopleController < ApplicationController
 
   # GET /people
   def index
-    @people = Person.all.order('id asc')
+    @people = Person.all.order('id desc')
     render json: @people
   end
 
@@ -23,6 +23,7 @@ class PeopleController < ApplicationController
   # POST /people
   def create
     @person = Person.new(person_params)
+    @person.wow = 0
 
     if @person.save
       render json: @person, status: :created, location: @person
