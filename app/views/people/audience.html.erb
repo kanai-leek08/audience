@@ -73,11 +73,12 @@
            received: function(data) {
              react.setAllPersons();
              if (data.message.match(/wow/)) {
-               var random = Math.floor(Math.random() * (500 - 50) + 50);
-               var popupClass = 'popup-' + random;
+               var top = Math.floor(Math.random() * ($(window).height() - 0) + 0);
+               var left = Math.floor(Math.random() * ($(window).width() - 0) + 0);
+               var popupClass = 'popup-' + top;
                var $elem = $("<div class='popup " + popupClass + "'>へぇ</div>");
-               $elem.css('top', random);
-               $elem.css('left', random);
+               $elem.css('top', top);
+               $elem.css('left', left);
                $('body').append($elem);
                $('.' + popupClass).fadeIn(300);
                setTimeout(function(){
