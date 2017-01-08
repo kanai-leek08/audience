@@ -10,21 +10,18 @@
     <script type="text/jsx">
      var Parent = React.createClass({
        getInitialState: function () {
-         var self = this;
-         axios.get('/people')
-          .then(function (res) {
-            self.setAllPersons(res.data)
-          })
-          .catch(function (err) {
-            console.log(err);
-         });
+         this.setAllPersons();
          return {
            textVal: "",
            persons: []
          };
        },
-       setAllPersons: function(allPersons) {
-         this.setState({ persons: allPersons });
+       setAllPersons: function() {
+         var self = this;
+         axios.get('/people')
+          .then(function (res) {
+            self.setState({ persons: res.data });
+          });
        },
        setNewPersons: function(newPerson) {
          var self = this;
@@ -34,10 +31,7 @@
           .then(function (res) {
             var persons = self.state.persons.concat(res.data);
             self.setState({ persons: persons });
-          })
-          .catch(function (err) {
-            console.log(err);
-         });
+          });
        },
        render: function() {
          return (
@@ -67,7 +61,7 @@
      var Person = React.createClass({
        render: function() {
          var persons = this.props.persons.map(function (person) {
-           return (<li> {person.name} <PersonDelete /> </li>);
+           return (<li id={person.id}> {person.name} <PersonDelete /> </li>);
          });
          return (
            <div>
@@ -78,13 +72,16 @@
      });
      var PersonDelete = React.createClass({
        _onClick: function (e) {
-         console.log(e)
+         var self = this;
+         var personId = e.target.parentElement.id
+         axios.delete('/people/' + personId)
+          .then(function (res) {
+            console.log(res.data)
+          });
        },
        render: function() {
          return (
-           <span>
-             <button onClick={this._onClick}>X</button>
-           </span>
+           <button onClick={this._onClick}>X</button>
          );
        }
      });
