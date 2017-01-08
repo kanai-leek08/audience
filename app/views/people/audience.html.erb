@@ -54,18 +54,23 @@
      var Message = React.createClass({
        getInitialState: function () {
          return {
-           messages: ['hoge', 'fuga']
+           messages: []
          };
        },
        render: function() {
          var messages = this.state.messages.map(function (message) {
            return (
-             <div>
                <p>{message}</p>
-             </div>
            );
          });
-         return <div>{messages}</div>
+         return (
+           <div>
+             <div id="messages">
+               {messages}
+             </div>
+             <input data-behavior="room_speaker"/>
+           </div>
+         )
        }
      });
      var PersonInput = React.createClass({
@@ -145,15 +150,5 @@
      var m = React.render(<Root />, document.getElementById('app'));
     </script>
 
-  <script>
-     App.room = App.cable.subscriptions.create("RoomChannel", {
-        connected: function() {},
-        disconnected: function() {},
-        received: function(data) {},
-        speak: function() {
-          return this.perform('speak');
-        }
-      });
-    </script>
   </body>
 </html>
