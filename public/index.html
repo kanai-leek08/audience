@@ -8,7 +8,7 @@
   <body>
     <div id="app"></div>
     <script type="text/jsx">
-     var Parent = React.createClass({
+     var Root = React.createClass({
        getInitialState: function () {
          this.setAllPersons();
          return {
@@ -37,7 +37,7 @@
          return (
            <div>
              <PersonInput onChange={this.setStateTextVal} onSave={this.setNewPersons} />
-             <Person persons={this.state.persons} />
+             <Person persons={this.state.persons} setAllPersons={this.setAllPersons} />
            </div>
          );
        }
@@ -59,9 +59,13 @@
        }
      });
      var Person = React.createClass({
+       _setAllPersons: function(){
+         this.props.setAllPersons();
+       },
        render: function() {
+         var self = this;
          var persons = this.props.persons.map(function (person) {
-           return (<li id={person.id}> {person.name} <PersonDelete /> </li>);
+           return (<li> {person.name} <PersonDelete person={person} setAllPersons={self._setAllPersons}/> </li>);
          });
          return (
            <div>
@@ -71,12 +75,14 @@
        }
      });
      var PersonDelete = React.createClass({
+       setAllPersons: function(){
+         this.props.setAllPersons();
+       },
        _onClick: function (e) {
          var self = this;
-         var personId = e.target.parentElement.id
-         axios.delete('/people/' + personId)
+         axios.delete('/people/' + this.props.person.id)
           .then(function (res) {
-            console.log(res.data)
+            self.setAllPersons();
           });
        },
        render: function() {
@@ -85,7 +91,7 @@
          );
        }
      });
-     var m = React.render(<Parent />, document.getElementById('app'));
+     var m = React.render(<Root />, document.getElementById('app'));
     </script>
   </body>
 </html>
