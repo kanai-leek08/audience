@@ -3,37 +3,52 @@
   <head>
     <script src="js/react.js"></script>
     <script src="js/JSX.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <div id="app"></div>
     <script type="text/jsx">
      var Parent = React.createClass({
        getInitialState: function () {
+         var self = this;
+         axios.get('/people')
+          .then(function (res) {
+            self.setAllPersons(res.data)
+          })
+          .catch(function (err) {
+            console.log(err);
+         });
          return {
            textVal: "",
            persons: []
          };
        },
-       setStateTextVal: function(textVal) {
-         this.setState({ textVal: textVal });
+       setAllPersons: function(allPersons) {
+         this.setState({ persons: allPersons });
        },
-       setStatePersons: function(newPerson) {
-         var persons = this.state.persons.concat(newPerson);
-         this.setState({ persons: persons });
+       setNewPersons: function(newPerson) {
+         var self = this;
+         var params = new URLSearchParams();
+         params.append('person[name]', newPerson);
+         axios.post('/people', params)
+          .then(function (res) {
+            var persons = self.state.persons.concat(res.data);
+            self.setState({ persons: persons });
+          })
+          .catch(function (err) {
+            console.log(err);
+         });
        },
        render: function() {
          return (
            <div>
-             <PersonInput onChange={this.setStateTextVal} onSave={this.setStatePersons} />
+             <PersonInput onChange={this.setStateTextVal} onSave={this.setNewPersons} />
              <Person persons={this.state.persons} />
            </div>
          );
        }
      });
      var PersonInput = React.createClass({
-       _onChange: function (e) {
-         this.props.onChange(e.target.value);
-       },
        _onKeyDown: function (e) {
          if (e.keyCode === 13) {
            this.props.onSave(e.target.value);
@@ -52,7 +67,7 @@
      var Person = React.createClass({
        render: function() {
          var persons = this.props.persons.map(function (person) {
-           return (<li> {person} <PersonDelete /> </li>);
+           return (<li> {person.name} <PersonDelete /> </li>);
          });
          return (
            <div>
