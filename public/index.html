@@ -4,6 +4,15 @@
     <script src="js/react.js"></script>
     <script src="js/JSX.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+      .person{
+        width: 30%;
+        display: inline-block;
+        background: #4CAF50;
+        text-align: center;
+        margin: 10px;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
@@ -66,17 +75,17 @@
          var self = this;
          var persons = this.props.persons.map(function (person) {
            return (
-             <li>
-              {person.name}：
-              {person.wow}へぇ：
+             <div className="person">
+              <p>{person.name}</p>
+              <p>{person.wow}へぇ</p>
               <PersonWow person={person} setAllPersons={self._setAllPersons}/>
               <PersonDelete person={person} setAllPersons={self._setAllPersons}/>
-             </li>
+             </div>
            );
          });
          return (
            <div>
-             <ul>{persons}</ul>
+             {persons}
            </div>
          );
        }
@@ -112,7 +121,7 @@
        },
        render: function() {
          return (
-           <button onClick={this._onClick}>X</button>
+           <button onClick={this._onClick}>X ユーザ削除</button>
          );
        }
      });
