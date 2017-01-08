@@ -65,12 +65,36 @@
        render: function() {
          var self = this;
          var persons = this.props.persons.map(function (person) {
-           return (<li> {person.name} <PersonDelete person={person} setAllPersons={self._setAllPersons}/> </li>);
+           return (
+             <li>
+              {person.name}：
+              {person.wow}へぇ：
+              <PersonWow person={person} setAllPersons={self._setAllPersons}/>
+              <PersonDelete person={person} setAllPersons={self._setAllPersons}/>
+             </li>
+           );
          });
          return (
            <div>
              <ul>{persons}</ul>
            </div>
+         );
+       }
+     });
+     var PersonWow = React.createClass({
+       setAllPersons: function(){
+         this.props.setAllPersons();
+       },
+       _onClick: function (e) {
+         var self = this;
+         axios.get('/increment_wow/' + this.props.person.id)
+          .then(function (res) {
+            self.setAllPersons();
+          });
+       },
+       render: function() {
+         return (
+           <button onClick={this._onClick}>へぇボタン</button>
          );
        }
      });

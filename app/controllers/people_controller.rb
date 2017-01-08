@@ -33,6 +33,10 @@ class PeopleController < ApplicationController
     end
   end
 
+  def increment_wow
+    render json: Person.find(params['id']).increment!(:wow, 1)
+  end
+
   # DELETE /people/1
   def destroy
     @person.destroy
